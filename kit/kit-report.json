@@ -1,0 +1,13 @@
+{
+  "slug": "maison-lumiere",
+  "tier": "297",
+  "posts": 17,
+  "videos": 3,
+  "docs": [
+    "gbp-pack.pdf",
+    "playbook.pdf",
+    "boost-guide.pdf"
+  ],
+  "bgSource": "gemini (4)",
+  "flags": []
+}
