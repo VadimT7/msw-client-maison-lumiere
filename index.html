@@ -253,5 +253,136 @@ addEventListener('scroll',function(){if(!raf){raf=true;requestAnimationFrame(run
 </div>
 
 <!-- MSW_CONCIERGE_WIDGET --><div id="msw-concierge"></div>
+<script id="msw-concierge-widget" data-agent-id="agent_6b9ae638a7205966ebdcd7c575">/* MSW first-party concierge widget. Injected verbatim by ci/inject-widget.mjs, which
+ * fills the three MSW placeholder tokens (agent id, clinic name, proxy URL). Styles itself from the
+ * site's CSS variables so every clinic's palette + fonts apply automatically.
+ * Talks only to the MSW-15 n8n proxy — no keys in the page. No backticks in this file. */
+(function () {
+  var AG = 'agent_6b9ae638a7205966ebdcd7c575', CL = 'Maison Lumière', PX = 'https://n8n.intakeline.com/webhook/msw-chat';
+  var css = ''
+    + '#mswcFab{position:fixed;right:20px;bottom:20px;z-index:9998;width:56px;height:56px;border-radius:50%;border:0;cursor:pointer;background:var(--c-accent,#8C6F46);color:var(--c-onaccent,#fff);box-shadow:0 10px 30px -8px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .3s cubic-bezier(.16,1,.3,1)}'
+    + '#mswcFab:hover{transform:translateY(-3px)}'
+    + '#mswcFab:active{transform:scale(.94)}'
+    + '#mswcFab svg{position:absolute;transition:opacity .35s cubic-bezier(.16,1,.3,1),transform .35s cubic-bezier(.16,1,.3,1)}'
+    + '#mswcFab .mswcIcoX{opacity:0;transform:rotate(-90deg) scale(.6)}'
+    + '#mswcFab.is-open .mswcIcoChat{opacity:0;transform:rotate(90deg) scale(.6)}'
+    + '#mswcFab.is-open .mswcIcoX{opacity:1;transform:none}'
+    + '@media(max-width:767px){#mswcFab{bottom:88px}}'
+    + '#mswcPanel{position:fixed;right:20px;bottom:88px;z-index:9999;width:min(380px,calc(100vw - 32px));height:min(560px,72vh);background:var(--c-card,#fff);color:var(--c-ink,#222);border:1px solid var(--c-line,#e5e0d8);border-radius:20px;box-shadow:0 32px 80px -20px rgba(0,0,0,.28),0 4px 18px -6px rgba(0,0,0,.12);display:flex;flex-direction:column;overflow:hidden;font-family:var(--f-body,system-ui);opacity:0;visibility:hidden;pointer-events:none;transform:translateY(18px) scale(.955);transform-origin:100% 100%;transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1),visibility 0s linear .5s}'
+    + '#mswcPanel.open{opacity:1;visibility:visible;pointer-events:auto;transform:none;transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1)}'
+    + '@media(prefers-reduced-motion:reduce){#mswcPanel,#mswcPanel.open{transition:none;transform:none}.mswcM{animation:none!important}}'
+    + '@media(max-width:767px){#mswcPanel{bottom:152px}}'
+    + '.mswcHead{position:relative;padding:16px 18px 12px;border-bottom:1px solid var(--c-line,#e5e0d8)}'
+    + '.mswcTitle{font-family:var(--f-display,Georgia,serif);font-size:19px;margin:0}'
+    + '.mswcSub{font-size:11px;opacity:.65;margin-top:2px}'
+    + '.mswcX{position:absolute;top:12px;right:12px;border:0;background:none;font-size:20px;cursor:pointer;color:inherit;opacity:.6;padding:4px 8px}'
+    + '.mswcX:hover{opacity:1}'
+    + '.mswcMsgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}'
+    + '.mswcM{max-width:85%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.55;white-space:pre-wrap;word-wrap:break-word;animation:mswcIn .42s cubic-bezier(.16,1,.3,1) both}'
+    + '@keyframes mswcIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}'
+    + '.mswcA{align-self:flex-start;background:var(--c-paper,#faf8f6);border:1px solid var(--c-line,#e5e0d8);border-bottom-left-radius:4px}'
+    + '.mswcU{align-self:flex-end;background:var(--c-accent,#8C6F46);color:var(--c-onaccent,#fff);border-bottom-right-radius:4px}'
+    + '.mswcM a{color:var(--c-accent,#8C6F46);text-decoration:underline}'
+    + '.mswcU a{color:inherit}'
+    + '.mswcRow{display:flex;gap:8px;padding:12px;border-top:1px solid var(--c-line,#e5e0d8)}'
+    + '.mswcIn{flex:1;border:1px solid var(--c-line,#e5e0d8);background:var(--c-paper,#faf8f6);color:inherit;border-radius:999px;padding:10px 16px;font-size:14px;outline:none;font-family:inherit}'
+    + '.mswcIn:focus{border-color:var(--c-accent,#8C6F46)}'
+    + '.mswcSend{border:0;border-radius:999px;padding:10px 18px;background:var(--c-accent,#8C6F46);color:var(--c-onaccent,#fff);font-weight:600;cursor:pointer;font-size:14px;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s}'
+    + '.mswcSend:hover{transform:translateY(-1px);box-shadow:0 8px 20px -8px rgba(0,0,0,.35)}'
+    + '.mswcSend:active{transform:scale(.97)}'
+    + '.mswcNote{font-size:10px;opacity:.55;text-align:center;padding:0 14px 10px}'
+    + '.mswcDots span{display:inline-block;width:5px;height:5px;margin:0 2.5px;border-radius:50%;background:currentColor;opacity:.35;animation:mswcB 1.5s cubic-bezier(.45,0,.55,1) infinite}'
+    + '.mswcDots span:nth-child(2){animation-delay:.2s}'
+    + '.mswcDots span:nth-child(3){animation-delay:.4s}'
+    + '@keyframes mswcB{0%,80%,100%{opacity:.25}40%{opacity:.9}}';
+  var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+
+  var fab = document.createElement('button');
+  fab.id = 'mswcFab';
+  fab.setAttribute('aria-label', 'Chat with ' + CL);
+  fab.setAttribute('aria-expanded', 'false');
+  fab.innerHTML = '<svg class="mswcIcoChat" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12a8 8 0 0 1-8 8H5l-2 2V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8z"/></svg><svg class="mswcIcoX" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+  var pnl = document.createElement('div');
+  pnl.id = 'mswcPanel';
+  pnl.setAttribute('role', 'dialog');
+  pnl.setAttribute('aria-label', CL + ' concierge chat');
+  pnl.innerHTML = '<div class="mswcHead"><p class="mswcTitle"></p><p class="mswcSub">Concierge · typically replies in seconds</p><button class="mswcX" aria-label="Close chat">×</button></div>'
+    + '<div class="mswcMsgs" aria-live="polite"></div>'
+    + '<div class="mswcRow"><input class="mswcIn" type="text" maxlength="600" placeholder="Ask about treatments, pricing, hours…" aria-label="Your message"/><button class="mswcSend">Send</button></div>'
+    + '<p class="mswcNote">You’re chatting with an AI concierge. Leaving your contact details means the clinic will contact you.</p>';
+  pnl.querySelector('.mswcTitle').textContent = CL;
+  document.body.appendChild(fab); document.body.appendChild(pnl);
+
+  var msgs = pnl.querySelector('.mswcMsgs'), input = pnl.querySelector('.mswcIn'), send = pnl.querySelector('.mswcSend');
+  var busy = false, chatId = null;
+  try { chatId = sessionStorage.getItem('msw_chat_' + AG) || null; } catch (e) {}
+
+  function esc(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+  function links(t) {
+    // [label](https://url) → anchor, then bare https URLs → anchors. https only.
+    var out = t.replace(/\[([^\]]+)\]\((https:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    out = out.replace(/(^|[^"'>=\]])(https:\/\/[^\s<)]*[^\s<).,!?;:])([.,!?;:]?)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>$3');
+    return out;
+  }
+  function add(kind, text) {
+    var m = document.createElement('div');
+    m.className = 'mswcM ' + (kind === 'u' ? 'mswcU' : 'mswcA');
+    m.innerHTML = links(esc(text));
+    msgs.appendChild(m); msgs.scrollTop = msgs.scrollHeight; return m;
+  }
+  function dots() {
+    var m = document.createElement('div');
+    m.className = 'mswcM mswcA mswcDots';
+    m.innerHTML = '<span></span><span></span><span></span>';
+    msgs.appendChild(m); msgs.scrollTop = msgs.scrollHeight; return m;
+  }
+  function post(b) {
+    return fetch(PX, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(b) }).then(function (r) { return r.json(); });
+  }
+  function ensure() {
+    if (chatId) return Promise.resolve();
+    return post({ action: 'start', agent_id: AG }).then(function (r) {
+      if (!r.ok) throw new Error('start failed');
+      chatId = r.chat_id;
+      try { sessionStorage.setItem('msw_chat_' + AG, chatId); } catch (e) {}
+    });
+  }
+  function ask() {
+    var t = (input.value || '').trim();
+    if (!t || busy) return;
+    busy = true; input.value = '';
+    add('u', t);
+    var d = dots();
+    ensure().then(function () { return post({ action: 'send', chat_id: chatId, content: t }); })
+      .then(function (r) {
+        d.remove();
+        if (r.ok && r.messages) { r.messages.forEach(function (x) { add('a', x); }); }
+        else { throw new Error('send failed'); }
+      })
+      .catch(function () {
+        d.remove();
+        chatId = null;
+        try { sessionStorage.removeItem('msw_chat_' + AG); } catch (e) {}
+        add('a', 'I hit a small snag — mind sending that once more?');
+      })
+      .then(function () { busy = false; input.focus(); });
+  }
+  send.addEventListener('click', ask);
+  input.addEventListener('keydown', function (e) { if (e.key === 'Enter') ask(); });
+  fab.addEventListener('click', function () {
+    var open = pnl.classList.toggle('open');
+    fab.classList.toggle('is-open', open);
+    fab.setAttribute('aria-expanded', String(open));
+    if (open) {
+      if (!msgs.children.length) add('a', 'Welcome to ' + CL + ' — I’m the concierge. Ask me about treatments, pricing or hours, or let’s get you booked.');
+      ensure().catch(function () {}); // prewarm the session so the first reply is instant-feeling
+      input.focus();
+    }
+  });
+  pnl.querySelector('.mswcX').addEventListener('click', function () { pnl.classList.remove('open'); fab.classList.remove('is-open'); fab.setAttribute('aria-expanded', 'false'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { pnl.classList.remove('open'); fab.classList.remove('is-open'); fab.setAttribute('aria-expanded', 'false'); } });
+})();
+</script>
 </body>
 </html>
